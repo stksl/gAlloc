@@ -1,0 +1,7 @@
+cli/
+
+*.csproj
+**obj/
+**bin/
+
+**.sln
