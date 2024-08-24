@@ -31,7 +31,7 @@ public unsafe class Allocator : IDisposable
 
         if (nBytes >= BLOCK_MAX_PAYLOAD)
         {
-            // just mapping the object into the process virtual memory, adding a checksum to identify large object
+            // just mapping the object into the process virtual memory and size of allocation
             IntPtr largeObject = mmap(IntPtr.Zero, nBytes + 4, LinuxProt.PROT_READ | LinuxProt.PROT_WRITE,
                 LinuxFlags.MAP_PRIVATE | LinuxFlags.MAP_ANONYMOUS, -1, 0);
             *(int*)largeObject = nBytes;
@@ -63,6 +63,11 @@ public unsafe class Allocator : IDisposable
         currOffset += newBlock->Size;
         return getLocalOffset((IntPtr)newBlock);
     }
+    /// <summary>
+    /// Access the allocation with given <paramref name="positiveOffset"/>
+    /// </summary>
+    /// <param name="positiveOffset"></param>
+    /// <returns></returns>
     public IntPtr access(IntPtr positiveOffset) 
     {
         if (positiveOffset < 0 || positiveOffset > currOffset) // large object
@@ -76,6 +81,11 @@ public unsafe class Allocator : IDisposable
 
         return (IntPtr)(header + 1);
     }
+    /// <summary>
+    /// Frees the allocation from internal heap or large-object heap
+    /// </summary>
+    /// <param name="positiveOffset"></param>
+    /// <returns></returns>
     public bool free(IntPtr positiveOffset)
     {
         if (positiveOffset < 0 || positiveOffset > currOffset) // large obj      
