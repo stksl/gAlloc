@@ -2,6 +2,7 @@
 
 `gAlloc` is a custom memory allocator designed to manage heap memory by balancing fragmentation and performance. The heap initially starts at 4 KB, and memory blocks are managed with a header and footer system.
 
+**Works only on Linux**
 ## Allocation
 
 When `gAlloc(nBytes)` is called, the requested number of bytes is aligned to 4-byte boundaries.
